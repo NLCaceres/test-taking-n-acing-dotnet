@@ -1,0 +1,50 @@
+﻿@page "/tests"
+@inject HttpClient Http
+@using TestTaking.Shared.Models
+
+<h1>Available Tests</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (tests == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Topic</th>
+                <th>Completed</th>
+                <th>Liked</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < tests.Length; i++)
+            {
+                <tr>
+                    <td>@tests[i].Title</td>
+                    <td>@tests[i].Topic</td>
+                    <td>@tests[i].Completed</td>
+                    <td>@tests[i].Liked</td>
+                    <td><a class="btn btn-primary" href="/test/@tests[i].ID">Begin?</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PracticeTest[] tests; // Lists are an option in C# just like java! Probably better to use honestly
+
+    protected override async Task OnInitializedAsync()
+    {
+        tests = await Http.GetJsonAsync<PracticeTest[]>("sample-data/tests.json");
+        for (int i = 0; i < tests.Length; i++) {
+            tests[i].ID = i;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+@page "/test/{testID:int}"
+@inject HttpClient Http
+@using TestTaking.Shared.Models
+
+<h1>@test.Title</h1>
+<h3>@test.Topic</h3>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">@test.Questions[currentQuestionIndex].QuestionText</h5>
+    <p class="card-text">@test.Questions[currentQuestionIndex].Answer</p>
+  </div>
+  <div>
+    @if (currentQuestionIndex > 0) {
+      <button class="btn btn-primary">Previous</button>
+    }
+    @if (currentQuestionIndex < test.Questions.Length) {
+      <button class="btn btn-primary">Next</button>
+    } 
+  </div>
+</div>
+
+
+@code {
+  private int currentQuestionIndex = 0;
+  private PracticeTest test = null;
+  protected override async Task OnInitializedAsync()
+    {
+        test = await Http.GetJsonAsync<PracticeTest>("sample-data/tests.json");
+    }
+  private void PreviousQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+    }
+  }
+  private void NextQuestion() {
+    if (currentQuestionIndex < test.Questions.Length ) {
+      currentQuestionIndex++;
+    }
+  }
+  [Parameter]
+  public int testID { get; set; }
+
+}
