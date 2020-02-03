@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using TestTaking.Shared.Models;
+using TestTaking.Server.Models;
 
 namespace TestTaking.Server
 {

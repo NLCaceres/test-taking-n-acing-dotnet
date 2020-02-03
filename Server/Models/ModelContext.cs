@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace TestTaking.Shared.Models
+namespace TestTaking.Server.Models
 {
   public class PracticeTestContext : DbContext
   {

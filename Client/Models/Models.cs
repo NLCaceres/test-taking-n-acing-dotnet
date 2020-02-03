@@ -1,4 +1,4 @@
-namespace TestTaking.Shared.Models
+namespace TestTaking.Client.Models
 {
   public class PracticeTest
   {
