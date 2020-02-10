@@ -1,7 +1,12 @@
-namespace TestTaking.Client.Models
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace TestTaking.Server.Models
 {
   public class PracticeTest
   {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)] // Accepts string instead of ObjectId types
     public string ID { get; set; }
     public string Title { get; set; }
     public string Topic { get; set; }
@@ -12,6 +17,8 @@ namespace TestTaking.Client.Models
   }
   public class Question
   {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string ID { get; set; }
     public string QuestionText { get; set; }
     public string Answer { get; set; }
