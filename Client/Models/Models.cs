@@ -2,7 +2,7 @@ namespace TestTaking.Client.Models
 {
   public class PracticeTest
   {
-    public int ID { get; set; }
+    public string ID { get; set; }
     public string Title { get; set; }
     public string Topic { get; set; }
 
@@ -12,7 +12,7 @@ namespace TestTaking.Client.Models
   }
   public class Question
   {
-    public int ID { get; set; }
+    public string ID { get; set; }
     public string QuestionText { get; set; }
     public string Answer { get; set; }
   }
