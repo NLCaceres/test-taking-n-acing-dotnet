@@ -1,33 +1,46 @@
-@page "/test/{testID:int}"
+@page "/test/{testID}"
 @inject HttpClient Http
 @using TestTaking.Client.Models
 
-<h1>@test.Title</h1>
-<h3>@test.Topic</h3>
+<h1>Practice Test </h1>
+@if (test == null) 
+{
+  <p><em>Loading...</em></p>
+}
+else 
+{
+  <h1>@test.Title</h1>
+  <h3>@test.Topic</h3>
 
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">@test.Questions[currentQuestionIndex].QuestionText</h5>
-    <p class="card-text">@test.Questions[currentQuestionIndex].Answer</p>
-  </div>
-  <div>
-    @if (currentQuestionIndex > 0) {
-      <button class="btn btn-primary">Previous</button>
-    }
-    @if (currentQuestionIndex < test.Questions.Length) {
-      <button class="btn btn-primary">Next</button>
-    } 
-  </div>
-</div>
-
+  @if (@test.Questions != null) 
+  {
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">@test.Questions[currentQuestionIndex].QuestionText</h5>
+        <p class="card-text">@test.Questions[currentQuestionIndex].Answer</p>
+      </div>
+      <div>
+        @if (currentQuestionIndex > 0) {
+          <button class="btn btn-primary">Previous</button>
+        }
+        @if (currentQuestionIndex < test.Questions.Length) {
+          <button class="btn btn-primary">Next</button>
+        } 
+      </div>
+    </div>
+  }
+}
 
 @code {
+  [Parameter]
+  public string testID { get; set; }
   private int currentQuestionIndex = 0;
-  private PracticeTest test = null;
+  private PracticeTest test;
+
   protected override async Task OnInitializedAsync()
-    {
-        test = await Http.GetJsonAsync<PracticeTest>("sample-data/tests.json");
-    }
+  {
+    test = await Http.GetJsonAsync<PracticeTest>($"api/practicetests/{testID}");
+  }
   private void PreviousQuestion() {
     if (currentQuestionIndex > 0) {
       currentQuestionIndex--;
@@ -38,7 +51,5 @@
       currentQuestionIndex++;
     }
   }
-  [Parameter]
-  public int testID { get; set; }
 
 }
