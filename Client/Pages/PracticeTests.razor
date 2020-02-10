@@ -1,10 +1,15 @@
 ﻿@page "/tests"
 @inject HttpClient Http
+@using System.Text
+@using System.Net
+@using Newtonsoft.Json
 @using TestTaking.Client.Models
 
 <h1>Available Tests</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
+
+<a class="btn btn-primary" href="/tests/new">Add a New Practice Test</a>
 
 @if (tests == null)
 {
@@ -23,14 +28,41 @@ else
             </tr>
         </thead>
         <tbody>
-            @for (var i = 0; i < tests.Length; i++)
+            @for(var i = 0; i < tests.Length; i++)
             {
+                var test = tests[i];
                 <tr>
-                    <td>@tests[i].Title</td>
-                    <td>@tests[i].Topic</td>
-                    <td>@tests[i].Completed</td>
-                    <td>@tests[i].Liked</td>
-                    <td><a class="btn btn-primary" href="/test/@tests[i].ID">Begin?</a></td>
+                    <td>@test.Title</td>
+                    <td>@test.Topic</td>
+                    <td>
+                        @if (@test.Completed) 
+                        {
+                           <img src="/static/checkmark.png" 
+                           class="img-fluid checkmark" alt="Check marking completion" 
+                           @onclick="@(() => OnCompleted(false, @test, @i))"/> 
+                        }
+                        else 
+                        {
+                            <img src="/static/cancel.png" 
+                            class="img-fluid checkmark" alt="X marking not completed"
+                            @onclick="@(() => OnCompleted(true, @test, @i))"/>
+                        }
+                    </td>
+                    <td>
+                        @if (@test.Liked) 
+                        {
+                           <img src="/static/like.png" 
+                           class="img-fluid checkmark" alt="Heart marking liked"
+                           @onclick="@(() => OnLiked(false, @test, @i))"/> 
+                        }
+                        else 
+                        {
+                            <img src="/static/empty_heart.png" 
+                            class="img-fluid checkmark" alt="Not filled heart marking not liked"
+                            @onclick="@(() => OnLiked(true, @test, @i))"/>
+                        }
+                    </td>
+                    <td><a class="btn btn-primary" href="/test/@test.ID">Begin?</a></td>
                 </tr>
             }
         </tbody>
@@ -42,9 +74,25 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        tests = await Http.GetJsonAsync<PracticeTest[]>("sample-data/tests.json");
-        for (int i = 0; i < tests.Length; i++) {
-            tests[i].ID = i;
+        tests = await Http.GetJsonAsync<PracticeTest[]>("api/practicetests");
+    }
+
+    async Task OnCompleted(bool completed, PracticeTest oldTest, int index) {
+        var editedTest = new PracticeTest { ID = oldTest.ID, Title = oldTest.Title, Topic = oldTest.Topic, Completed = completed, Liked = oldTest.Liked };
+        var jsonEditedTest = JsonConvert.SerializeObject(editedTest);
+        var httpContent = new StringContent(jsonEditedTest, Encoding.UTF8, "application/json");
+        var response = await Http.PutAsync($"api/practicetests/{oldTest.ID}", httpContent);
+        if (response.StatusCode == HttpStatusCode.NoContent) { // Successful so change it in the DOM!
+            oldTest.Completed = completed;
+        }
+    } 
+    async Task OnLiked(bool liked, PracticeTest oldTest, int index) {
+        var editedTest = new PracticeTest { ID = oldTest.ID, Title = oldTest.Title, Topic = oldTest.Topic, Completed = oldTest.Completed, Liked = liked };
+        var jsonEditedTest = JsonConvert.SerializeObject(editedTest);
+        var httpContent = new StringContent(jsonEditedTest, Encoding.UTF8, "application/json");
+        var response = await Http.PutAsync($"api/practicetests/{oldTest.ID}", httpContent);
+        if (response.StatusCode == HttpStatusCode.NoContent) { // Successful so change it in the DOM!
+            oldTest.Liked = liked;
         }
     }
 }
