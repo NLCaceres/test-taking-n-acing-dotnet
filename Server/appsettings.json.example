@@ -1,0 +1,20 @@
+{
+  "DbSettings": {
+    "CollectionName": "collectionName",
+    "ConnectionString": "mongodb+srv://<username>:<password>@cluster#.mongo.com",
+    "DatabaseName": "databaseName"
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "Debug": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    },
+    "Console": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    }
+  }
+}
