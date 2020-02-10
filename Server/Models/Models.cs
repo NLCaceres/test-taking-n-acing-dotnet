@@ -6,7 +6,8 @@ namespace TestTaking.Server.Models
   public class PracticeTest
   {
     [BsonId]
-    public int ID { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)] // Accepts string instead of ObjectId types
+    public string ID { get; set; }
     public string Title { get; set; }
     public string Topic { get; set; }
 
@@ -17,7 +18,8 @@ namespace TestTaking.Server.Models
   public class Question
   {
     [BsonId]
-    public int ID { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string ID { get; set; }
     public string QuestionText { get; set; }
     public string Answer { get; set; }
   }
