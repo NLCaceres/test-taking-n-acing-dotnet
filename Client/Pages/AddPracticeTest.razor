@@ -1,0 +1,34 @@
+@page "/tests/new"
+@inject HttpClient Http
+@using TestTaking.Client.Models
+
+<h1>New Practice Test!</h1>
+
+<form>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" placeholder="Your Test's Title!" @bind="title">
+  </div>
+  <div class="form-group">
+    <label for="topic">Topic</label>
+    <input type="text" class="form-control" id="topic" placeholder="Your Test's Topic!" @bind="topic">
+  </div>
+</form>
+<button class="btn btn-primary" @onclick="SubmitNewTest">Submit</button>
+@if (submitPressed) {
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    Submitted: Test with the title: @title and topic: @topic
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+} 
+@code {
+  private string title;
+  private string topic;
+  private bool submitPressed = false;
+
+  private void SubmitNewTest() {
+    submitPressed = !submitPressed;
+  }
+}
